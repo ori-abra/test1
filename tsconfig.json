@@ -1,0 +1,53 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/query-service-e2e"
+    },
+    {
+      "path": "./apps/query-service"
+    },
+    {
+      "path": "./apps/notes-service-e2e"
+    },
+    {
+      "path": "./apps/notes-service"
+    },
+    {
+      "path": "./apps/feeling-tracker-service-e2e"
+    },
+    {
+      "path": "./apps/feeling-tracker-service"
+    },
+    {
+      "path": "./apps/positions-service-e2e"
+    },
+    {
+      "path": "./apps/positions-service"
+    },
+    {
+      "path": "./apps/checkups-service-e2e"
+    },
+    {
+      "path": "./apps/checkups-service"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./libs/ui"
+    },
+    {
+      "path": "./libs/server-kit"
+    }
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node10",
+      "customConditions": null
+    }
+  }
+}

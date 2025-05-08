@@ -1,0 +1,45 @@
+{
+  "name": "@journal/server-kit",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "dist/libs/server-kit",
+          "tsConfig": "libs/server-kit/tsconfig.lib.json",
+          "packageJson": "libs/server-kit/package.json",
+          "main": "libs/server-kit/src/index.ts",
+          "assets": [
+            "libs/server-kit/*.md"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+name: Release libraries
+
+on:
+  push:
+    branches: [main]
+
+    paths:
+      - 'libs/**'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - server-kit
+
+    steps:
+      - name: Authenticate as GitHub App
+        id: app_auth
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id:       ${{ secrets.GH_APP_ID }}
+          private_key:  ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app_auth.outputs.token }}
+          fetch-depth: 0
+
+      - run: |
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - run: HUSKY=0 npm ci
+
+      - name: Build ${{ matrix.package }}
+        run: npm run build:${{ matrix.package }}
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      - name: Semantic Release for ${{ matrix.package }}
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          working_directory: libs/${{ matrix.package }}
+        env:
+          GITHUB_TOKEN: ${{ steps.app_auth.outputs.token }}
+          NPM_TOKEN:    ${{ secrets.NPM_TOKEN }}
+
+      - name: Post Semantic Release
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: echo "${{ matrix.package }} -> ${{ steps.semantic.outputs.new_release_version }}"
